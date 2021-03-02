@@ -64,36 +64,8 @@ func (s *scraper) GetMovieDetails(total int) {
 			return false
 		}
 
-<<<<<<< HEAD
-		// This is master
-
-		movie := &MovieDetails{}
-		// Title
-		title := tr.Find("td.titleColumn a").Text()
-		movie.Title = title
-		// fmt.Printf("%d, %s\n", i, strings.TrimSpace(title))
-
-		// Year
-		yearPattern := regexp.MustCompile("[0-9]{4}")
-		text := tr.Find("td.titleColumn span").Text()
-		year := string(yearPattern.Find([]byte(text)))
-		movie.Year = year
-		// fmt.Printf("%d, %s\n", i, year)
-
-		// Rating
-		rating := tr.Find("td.imdbRating strong").Text()
-		movie.Rating = rating
-		// fmt.Printf("%d, %s\n", i, strings.TrimSpace(rating))
-
-		path, ok := tr.Find("td.titleColumn a").Attr("href")
-		if !ok {
-			s.Logger.Fatalf("Scrapping error: Couldn't find path in td.titleColumn")
-		}
-		url := s.Selector.Url.Scheme + "://" + s.Selector.Url.Hostname() + path
-=======
 		plainSelector := &customSelector{tr}
 		selectorWithDoc := &customSelector{s.pageSelector(tr)}
->>>>>>> current
 
 		movie := &movieDetails{
 			Title:    plainSelector.getTitle(),
