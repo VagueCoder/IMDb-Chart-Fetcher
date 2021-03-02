@@ -83,7 +83,7 @@ func (s *scraper) GetMovieDetails(total int) {
 	})
 }
 
-// Encode method marshals the MovieCollection object and returns JSON
+// Encode encodes the MovieCollection object and streams through writer
 func (s scraper) Encode(writer io.Writer) {
 	err := json.NewEncoder(writer).Encode(s.MoviesCollection)
 	if err != nil {
