@@ -43,6 +43,8 @@ func (s *Scraper) GetMovieDetails(total int) {
 			return false
 		}
 
+		// This is current
+
 		movie := &MovieDetails{}
 		// Title
 		title := tr.Find("td.titleColumn a").Text()
