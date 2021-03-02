@@ -2,6 +2,7 @@ package scrapers
 
 import (
 	"encoding/json"
+	"io"
 	"log"
 
 	"github.com/PuerkitoBio/goquery"
@@ -15,12 +16,12 @@ type scraper struct {
 
 // movieDetails object holds the details of movie
 type movieDetails struct {
-	Title    string `json:"title"`
-	Year     string `json:"movie_release_year"` // Add Validator
-	Rating   string `json:"imdb_rating"`
-	Summary  string `json:"summary"`
-	Duration string `json:"duration"`
-	Genre    string `json:"genre"`
+	Title    string  `json:"title"`
+	Year     string  `json:"movie_release_year"` // Add Validator
+	Rating   float32 `json:"imdb_rating"`
+	Summary  string  `json:"summary"`
+	Duration string  `json:"duration"`
+	Genre    string  `json:"genre"`
 }
 
 // movies is collection of movieDetails objects
@@ -29,6 +30,7 @@ type movies []movieDetails
 // customSelector is a wrapper for calling scrapers methods alone
 type customSelector struct {
 	*goquery.Selection
+	logger *log.Logger
 }
 
 // NewScraper initiates new scraper obkect and returns reference
@@ -60,12 +62,9 @@ func (s *scraper) pageSelector(tr *goquery.Selection) *goquery.Selection {
 // Takes number of items required and updates the MovieCollection object of scraper accordingly.
 func (s *scraper) GetMovieDetails(total int) {
 	s.Selector.Find("tbody.lister-list").Find("tr").EachWithBreak(func(i int, tr *goquery.Selection) bool {
-		if i+1 == total {
-			return false
-		}
 
-		plainSelector := &customSelector{tr}
-		selectorWithDoc := &customSelector{s.pageSelector(tr)}
+		plainSelector := &customSelector{tr, s.Logger}
+		selectorWithDoc := &customSelector{s.pageSelector(tr), s.Logger}
 
 		movie := &movieDetails{
 			Title:    plainSelector.getTitle(),
@@ -77,15 +76,17 @@ func (s *scraper) GetMovieDetails(total int) {
 		}
 
 		s.MoviesCollection = append(s.MoviesCollection, *movie)
+		if i == total {
+			return false
+		}
 		return true
 	})
 }
 
 // Encode method marshals the MovieCollection object and returns JSON
-func (s scraper) Encode() []byte {
-	encoded, err := json.Marshal(s.MoviesCollection)
+func (s scraper) Encode(writer io.Writer) {
+	err := json.NewEncoder(writer).Encode(s.MoviesCollection)
 	if err != nil {
 		s.Logger.Fatalf("Error Encoding JSON: %v", err)
 	}
-	return encoded
 }
