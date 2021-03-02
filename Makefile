@@ -1,2 +1,2 @@
 scraper:
-	go run ./app/fetcher/main.go
+	go run ./app/main.go
