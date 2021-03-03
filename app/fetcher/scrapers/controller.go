@@ -72,16 +72,29 @@ func (s *scraper) GetMovieDetails(total int) {
 		s.MoviesCollection = append(s.MoviesCollection, movieDetails{})
 	}
 
+	var counter int
+
+	// Create required number of goroutines to run concurrently
 	wg.Add(total)
 	s.Selector.Find("tbody.lister-list").Find("tr").EachWithBreak(func(i int, tr *goquery.Selection) bool {
-
+		counter = i
 		go s.scrapeMovieDetails(tr, &wg)
-		if i == total-1 {
+		if counter == total-1 {
 			return false
 		}
 		return true
 	})
+
+	// When items_count is greater than available
+	if counter != total-1 {
+		s.Logger.Printf("Note: There total available number of items in the chart are %d\n", counter+1)
+		wg.Add(-total + counter + 1)
+		mutex.Lock()
+		s.MoviesCollection = s.MoviesCollection[:counter+1]
+		mutex.Unlock()
+	}
 	wg.Wait()
+
 }
 
 func (s *scraper) scrapeMovieDetails(tr *goquery.Selection, wg *sync.WaitGroup) {
