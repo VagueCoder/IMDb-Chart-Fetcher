@@ -3,6 +3,7 @@ package scrapers
 import (
 	"bytes"
 	"log"
+	"net/url"
 	"os"
 	"strings"
 	"testing"
@@ -12,6 +13,7 @@ import (
 )
 
 var (
+	URL        string = "https://www.imdb.com/india/top-rated-indian-movies/"
 	scraperObj *scraper
 	selector   *goquery.Selection
 	movie      *movieDetails
@@ -19,8 +21,7 @@ var (
 )
 
 func createScraper() (*scraper, error) {
-	url := "https://www.imdb.com/india/top-rated-indian-movies/"
-	document, err := goquery.NewDocument(url)
+	document, err := goquery.NewDocument(URL)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +40,7 @@ func TestScraper(t *testing.T) {
 func TestScraperFuncs1(t *testing.T) {
 	selector = scraperObj.Selector.Find("tbody.lister-list").Find("tr").First()
 	logger = log.New(os.Stderr, "", log.LstdFlags)
-	plainSelector := &customSelector{selector, logger}
+	plainSelector := &customSelector{selector, nil, logger}
 
 	title := plainSelector.getTitle()
 	assert.NotNil(t, title, "title is Nil")
@@ -59,7 +60,11 @@ func TestScraperFuncs1(t *testing.T) {
 }
 
 func TestScraperFuncs2(t *testing.T) {
-	selectorWithDoc := &customSelector{scraperObj.pageSelector(selector), logger}
+	url, err := url.Parse(URL)
+	if err != nil {
+		assert.Failf(t, "URL parsing failed", "URL parsing error: %v", err)
+	}
+	selectorWithDoc := &customSelector{scraperObj.pageSelector(selector), url, logger}
 	assert.NotNil(t, selectorWithDoc, "selectorWithDoc Object is Nil")
 	assert.NotNil(t, movie, "movie Object is Nil")
 
