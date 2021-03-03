@@ -20,6 +20,5 @@ func FetchItems(url string, total int, writer io.Writer) {
 
 	scraperObject := scrapers.NewScraper(document, nil, logger)
 	scraperObject.GetMovieDetails(total)
-
 	scraperObject.Encode(writer)
 }
