@@ -5,6 +5,7 @@ build:
 	go build -o IMDb-Chart-Fetcher ./app
 
 execute:
+	make build
 	./IMDb-Chart-Fetcher 'https://www.imdb.com/india/top-rated-indian-movies/' 2
 
 test:
@@ -13,6 +14,7 @@ test:
 	go test ./app/ -v
 
 all:
-	go run ./app/main.go 'https://www.imdb.com/india/top-rated-indian-movies/' 500
-	go run ./app/main.go 'https://www.imdb.com/india/top-rated-tamil-movies/' 500
-	go run ./app/main.go 'https://www.imdb.com/india/top-rated-telugu-movies/' 500
+	make build
+	./IMDb-Chart-Fetcher 'https://www.imdb.com/india/top-rated-indian-movies/' 500
+	./IMDb-Chart-Fetcher 'https://www.imdb.com/india/top-rated-tamil-movies/' 500
+	./IMDb-Chart-Fetcher 'https://www.imdb.com/india/top-rated-telugu-movies/' 500

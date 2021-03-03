@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"log"
+	"net/url"
 	"sync"
 
 	"github.com/PuerkitoBio/goquery"
@@ -37,6 +38,7 @@ type movies []movieDetails
 // customSelector is a wrapper for calling scrapers methods alone
 type customSelector struct {
 	*goquery.Selection
+	url    *url.URL
 	logger *log.Logger
 }
 
@@ -98,8 +100,8 @@ func (s *scraper) GetMovieDetails(total int) {
 }
 
 func (s *scraper) scrapeMovieDetails(tr *goquery.Selection, wg *sync.WaitGroup) {
-	plainSelector := &customSelector{tr, s.Logger}
-	selectorWithDoc := &customSelector{s.pageSelector(tr), s.Logger}
+	plainSelector := &customSelector{tr, nil, s.Logger}
+	selectorWithDoc := &customSelector{s.pageSelector(tr), s.Selector.Url, s.Logger}
 	movie := movieDetails{
 		rank:     plainSelector.getRank(),
 		Title:    plainSelector.getTitle(),
