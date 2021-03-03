@@ -9,6 +9,8 @@ import (
 // getSummary scrapes the movie summary from IMDb page
 func (c *customSelector) getSummary() string {
 	summary := strings.TrimSpace(c.Find("div.summary_text").Text())
+
+	// Special case when only a part of summary is deplayed on the page. Redirect and scrape.
 	if strings.HasSuffix(summary, "See full summary »") {
 		path, ok := c.Find("div.summary_text a").Attr("href")
 		if !ok {

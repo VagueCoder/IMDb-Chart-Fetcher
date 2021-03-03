@@ -10,11 +10,13 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
+// Variables that are shared between all the goroutines
 var (
 	wg    sync.WaitGroup
 	mutex sync.Mutex
 )
 
+// scraper is a common data struct to define all the methods. Needless to export structure.
 type scraper struct {
 	Logger           *log.Logger
 	Selector         *goquery.Document
@@ -23,7 +25,7 @@ type scraper struct {
 
 // movieDetails object holds the details of movie
 type movieDetails struct {
-	rank     int
+	rank     int     // Required to order the result items due to goroutines. Not exported.
 	Title    string  `json:"title"`
 	Year     string  `json:"movie_release_year"` // Add Validator
 	Rating   float32 `json:"imdb_rating"`
@@ -32,7 +34,7 @@ type movieDetails struct {
 	Genre    string  `json:"genre"`
 }
 
-// movies is collection of movieDetails objects
+// movies is collection of movieDetails objects to avoid calling slice in parameters
 type movies []movieDetails
 
 // customSelector is a wrapper for calling scrapers methods alone
@@ -42,7 +44,7 @@ type customSelector struct {
 	logger *log.Logger
 }
 
-// NewScraper initiates new scraper obkect and returns reference
+// NewScraper initiates new scraper obkect and returns reference. Return object type is needless to export.
 func NewScraper(resp *goquery.Document, movie movies, logger *log.Logger) *scraper {
 	return &scraper{
 		Selector:         resp,
@@ -51,7 +53,8 @@ func NewScraper(resp *goquery.Document, movie movies, logger *log.Logger) *scrap
 	}
 }
 
-// pageSelector scrapes the page URLs from chart page, creates a goquery Selection object and returns
+// pageSelector scrapes the page URLs from chart page
+// Creates and returns a goquery generic Selection object of full page
 func (s *scraper) pageSelector(tr *goquery.Selection) *goquery.Selection {
 
 	path, ok := tr.Find("td.titleColumn a").Attr("href")
@@ -99,6 +102,8 @@ func (s *scraper) GetMovieDetails(total int) {
 
 }
 
+// scrapeMovieDetails scrapes all scraper functions and updates the scraper's MovieDetails
+// This is utilized as a goroutine to improve the performance
 func (s *scraper) scrapeMovieDetails(tr *goquery.Selection, wg *sync.WaitGroup) {
 	plainSelector := &customSelector{tr, nil, s.Logger}
 	selectorWithDoc := &customSelector{s.pageSelector(tr), s.Selector.Url, s.Logger}
