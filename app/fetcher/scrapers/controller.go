@@ -76,7 +76,7 @@ func (s *scraper) GetMovieDetails(total int) {
 		}
 
 		s.MoviesCollection = append(s.MoviesCollection, *movie)
-		if i == total {
+		if i == total-1 {
 			return false
 		}
 		return true
