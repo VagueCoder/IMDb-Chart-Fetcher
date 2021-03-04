@@ -39,7 +39,7 @@ Syntax: `go run path/to/main.go chart_url items_count`
 ```
 go run ./app/main.go 'https://www.imdb.com/india/top-rated-indian-movies/' 2
 ```
-This works. But it is always recommended to use executable.
+> This works. But it is always recommended to use executable.
 
 ### 2. Build
 Syntax: `go build -o executable_name path/to/main/directory`
@@ -60,7 +60,7 @@ go test ./app/fetcher/scrapers/ -v
 go test ./app/fetcher/ -v
 go test ./app/ -v
 ```
-One for each level. Each test again contains multiple sub test cases as per requirement.
+>One for each level. Each test again contains multiple sub test cases as per requirement.
 ```
     go test ./app/fetcher/scrapers/ -v
     === RUN   TestScraper
@@ -93,7 +93,7 @@ Syntax: `executable chart_url items_count`
 ./IMDb-Chart-Fetcher 'https://www.imdb.com/india/top-rated-tamil-movies/' 500
 ./IMDb-Chart-Fetcher 'https://www.imdb.com/india/top-rated-telugu-movies/' 500
 ```
-This is the final usage of the application. Here, items_count is 500, i.e., any big number, greater than the chart size. The application warns when maximum size is exceeded and limits the execution to available records size.
+> This is the final usage of the application. Here, items_count is 500, i.e., any big number, greater than the chart size. The application warns when maximum size is exceeded and limits the execution to available records size.
 
 ## Return Data Format :page_with_curl:
 The output data is expected to be a collection of JSON objects as follows:
@@ -117,7 +117,7 @@ The output data is expected to be a collection of JSON objects as follows:
 ```
 
 ## [Makefile](https://github.com/VagueCoder/IMDb-Chart-Fetcher/blob/master/Makefile) :floppy_disk:
-GNU Make is used for ease of calling run, build, execute and test commands as above. This is default for many Linux operating systems and can be handy. However, if non-Linux OS or in case of no GNU Make, copy the commands directly terminal/command prompt.
+GNU Make is used for ease of calling run, build, execute and test commands as above. This is default for many Linux operating systems and can be handy. However, if non-Linux OS or in case of no GNU Make, copy the commands directly to terminal/command prompt.
 
 Syntax: `make COMMAND_NAME`
 The possible commands here are:
@@ -128,6 +128,7 @@ The possible commands here are:
   make test
   make all
 ```
+> Here, `run`, `build`, `execute`, `test` and `all` are user-defined.
 
 ## Sample Execution Output :runner:
 ```
