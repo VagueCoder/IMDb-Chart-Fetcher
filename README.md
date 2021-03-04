@@ -93,7 +93,10 @@ Syntax: `executable chart_url items_count`
 ./IMDb-Chart-Fetcher 'https://www.imdb.com/india/top-rated-tamil-movies/' 500
 ./IMDb-Chart-Fetcher 'https://www.imdb.com/india/top-rated-telugu-movies/' 500
 ```
-> This is the final usage of the application. Here, items_count is 500, i.e., any big number, greater than the chart size. The application warns when maximum size is exceeded and limits the execution to available records size.
+> This is the final usage of the application. Here, items_count is 500, i.e., any big number, greater than the chart size. The application warns when maximum size is exceeded and limits the execution to available records size, like below.
+```
+    [IMDb-Chart-Fetcher] 2021/03/04 06:24:43 controller.go:95: Note: The total available number of items in the chart are 250
+```
 
 ## Return Data Format :page_with_curl:
 The output data is expected to be a collection of JSON objects as follows:
