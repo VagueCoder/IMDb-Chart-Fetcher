@@ -137,6 +137,6 @@ go run ./app/main.go 'https://www.imdb.com/india/top-rated-indian-movies/' 2
 ```
 
 ## Key Features :key: :trollface:
-`Concurrency` is used in [controller.go](https://github.com/VagueCoder/IMDb-Chart-Fetcher/blob/master/app/fetcher/scrapers/controller.go) for scrapeMovieDetails() method to achieve better performance from the application. The scrapeMovieDetails() method is the one calls 7 scrapers for n individual items for collect and send to encoder. By moving the calls (tested for 250 goroutines so far as that was the max chart size) makes the execution a lot easier and returns results much quicker (39 seconds for 250 items).
+`Concurrency` is used in [controller.go](https://github.com/VagueCoder/IMDb-Chart-Fetcher/blob/master/app/fetcher/scrapers/controller.go) for scrapeMovieDetails() method to achieve better performance from the application. The scrapeMovieDetails() method is the one that calls 7 scrapers for each of the n items to collect and send the data to encoder. By moving the calls to goroutines (tested for 250 goroutines so far as that was the max chart size) makes the execution a lot easier and returns results much quicker (39 seconds for 250 items).
 
 The serialization is achieved with the help of rank that the chart has. But to manage the goroutine, `mutex` and `waitgroups` are used rather than buffered channels.
