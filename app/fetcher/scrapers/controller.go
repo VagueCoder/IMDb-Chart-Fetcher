@@ -92,7 +92,7 @@ func (s *scraper) GetMovieDetails(total int) {
 
 	// When items_count is greater than available
 	if counter != total-1 {
-		s.Logger.Printf("Note: There total available number of items in the chart are %d\n", counter+1)
+		s.Logger.Printf("Note: The total available number of items in the chart are %d\n", counter+1)
 		wg.Add(-total + counter + 1)
 		mutex.Lock()
 		s.MoviesCollection = s.MoviesCollection[:counter+1]
